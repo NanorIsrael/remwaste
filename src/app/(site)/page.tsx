@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import StepPage from "@/pages/Step";
 
 export const metadata: Metadata = {
   title: "Pricedafom | Pricedafom Marketplace",
@@ -6,12 +7,14 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function StepPage() {
+export default function Home() {
   return (
     <>
-      <div>
-        step page
-      </div>
+      <main>
+        <div className="overflow-hidden pt-15 bg-gray-100">
+          <StepPage />
+        </div>
+      </main>
     </>
   );
 }

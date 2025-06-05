@@ -5,11 +5,10 @@ import { menuData } from "./menuData";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-
 const Header = () => {
   const [navigationOpen, setNavigationOpen] = useState(false);
   const [stickyMenu, setStickyMenu] = useState(false);
-  const router = useRouter()
+  const router = useRouter();
   const [loading, setLoading] = useState<boolean>(false);
 
   // Sticky menu
@@ -24,13 +23,8 @@ const Header = () => {
   useEffect(() => {
     window.addEventListener("scroll", handleStickyMenu);
   });
- 
-  return (
-    <header>
-    </header>
-  );
+
+  return <header></header>;
 };
 
 export default Header;
-
-
