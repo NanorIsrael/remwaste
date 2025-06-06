@@ -5,6 +5,14 @@ import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 
+type Item = {
+  id: string;
+  title: string;
+  description: string;
+  image: string;
+  price: number;
+};
+
 const data = [
   {
     id: "1",
@@ -14,70 +22,70 @@ const data = [
     price: 100,
   },
   {
-    id: "1",
+    id: "2",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "3",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "4",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "5",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "6",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "7",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "8",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "9",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "10",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
     price: 100,
   },
   {
-    id: "1",
+    id: "11",
     title: "item 1",
     description: "This is Home for Pricedafom's marketplace",
     image: "/images/4-yarder-skip.jpg",
@@ -86,13 +94,18 @@ const data = [
 ];
 const StepPage = () => {
   const [isFocused, setIsFocused] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
-  const handleClick = () => {
-    setIsSelected(true);
-    setIsFocused(true);
-    console.log("Card clicked", isSelected, isFocused);
-  }
+  const handleClick = (item: Item) => {
+    if (selectedItem?.id === item.id) {
+      setSelectedItem(null);
+      setIsFocused(false);
+      return;
+    } else {
+      setSelectedItem(item);
+    }
+  };
+
   return (
     <div className="max-w-[1170px] 2xl:max-w-[1450px] w-full mx-auto px-4 sm:px-8 xl:px-0">
       <div className="flex flex-col items-center justify-between py-4">
@@ -107,12 +120,18 @@ const StepPage = () => {
         {data.map((item) => (
           <Card
             key={item.id}
-            className={`w-full h-full ${isFocused ? "border border-white  border-gray-200 " : "border border-white shadow-2xl "} rounded-md transition-all duration-300 ease-in-out`}
+            className={`w-full h-full ${ (selectedItem?.id === item.id) ? "border-4   border-green " : "border border-white shadow-2xl "} rounded-md transition-all duration-300 ease-in-out`}
             onMouseEnter={() => setIsFocused(true)}
-            onMouseLeave={() => !isSelected && setIsFocused(false)}
+            onMouseLeave={() =>
+              !(selectedItem?.id === item.id) && setIsFocused(false)
+            }
             onFocus={() => setIsFocused(true)}
-            onBlur={() => !isSelected && setIsFocused(false)}
-            onClick={handleClick}
+            onBlur={() =>
+              !(selectedItem?.id === item.id) && setIsFocused(false)
+            }
+            onClick={(e) => {
+              handleClick(item);
+            }}
             tabIndex={0}
           >
             <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2 relative">
@@ -129,13 +148,13 @@ const StepPage = () => {
                   </p>
                   <div
                     aria-expanded={isFocused}
-                    className={`absolute top-2  right-2 ${isFocused ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
+                    className={`absolute top-2  right-2 ${selectedItem?.id === item.id ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
                   >
                     <Badge
                       variant={"outline"}
                       className="text-green uppercase p-2 bg-white border boder-b-[#FFD700] w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
                     >
-                     { isSelected ? "deselect" : "select" }
+                      {"selected"}
                     </Badge>
                   </div>
                 </div>
@@ -150,25 +169,28 @@ const StepPage = () => {
                 className="object-cover lg:object-fill rounded-md"
                 sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 800px"
               />
-               <div
-                    aria-expanded={!isFocused}
-                    className={`absolute top-2  left-2 ${!isFocused ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
-                  >
-                    <Badge
-                      variant={"outline"}
-                      className="text-red uppercase py-4 bg-white border boder-dark w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
-                    >
-                     4 yards
-                    </Badge>
-                  </div>
+              <div
+                aria-expanded={!(selectedItem?.id === item.id)}
+                className={`absolute top-2  left-2 ${!(selectedItem?.id === item.id) ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
+              >
+                <Badge
+                  variant={"outline"}
+                  className="text-red uppercase py-4 bg-white border boder-dark w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
+                >
+                  4 yards
+                </Badge>
+              </div>
             </CardContent>
           </Card>
         ))}
       </div>
       <div className="flex flex-col lg:flex-row items-center justify-between py-0 bg-yellow-light">
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 lg:max-w-[600px] w-full  p-6 rounded-lg shadow-lg">
-          <p className="text-dark font-bold">Imagery and information shown throughout this website may not reflect the exact shape or size 
-          specification, colours may vary, options and/or accessories may be featured at additional cost.</p>
+          <p className="text-dark font-bold">
+            Imagery and information shown throughout this website may not
+            reflect the exact shape or size specification, colours may vary,
+            options and/or accessories may be featured at additional cost.
+          </p>
         </div>
         <div className="text-green-dark py-4">
           <p>40 Yard Skip</p>
@@ -181,17 +203,16 @@ const StepPage = () => {
             className="mb-4 md:mb-0 md:mr-2 font-semibold bg-white text-dark px-10 h-full py-4 rounded-md hover:text-white hover:bg-blue-light transition-colors duration-300"
             onClick={() => alert("Proceeding to next step...")}
           >
-             Back 
+            Back
           </button>
           <button
             className="font-semibold bg-green text-white px-6 py-4 rounded-md hover:bg-blue-light transition-colors duration-300"
             onClick={() => alert("Proceeding to previous step...")}
           >
-             <span className="ml-1 whitespace-nowrap">Continue →</span>
+            <span className="ml-1 whitespace-nowrap">Continue →</span>
           </button>
         </div>
-        
-        </div>
+      </div>
     </div>
   );
 };
