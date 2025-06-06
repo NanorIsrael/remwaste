@@ -24,18 +24,13 @@ type Item = {
 };
 
 const StepPage = () => {
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
-  const [products, setProducts] = useState<Item[] | null>(null);
+  const [products, setProducts] = useState<Item[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [focusedCardId, setFocusedCardId] = useState<number | null>(null);
+  const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
+  const cols = 4; 
 
-  const handleClick = (item: Item) => {
-    if (selectedItem?.id === item.id) {
-      setSelectedItem(null);
-      return;
-    } else {
-      setSelectedItem(item);
-    }
-  };
+  const selectedItem = products.find(item => item.id === selectedCardId);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -58,10 +53,58 @@ const StepPage = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Enter'].includes(e.key)) return;
+      
+      e.preventDefault();
+      if (!products || products.length === 0) return;
+      const currentIndex = products.findIndex(item => item.id === focusedCardId);
+      let nextIndex = 0;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          nextIndex = (currentIndex + 1) % products.length;
+          break;
+        case 'ArrowLeft':
+          nextIndex = (currentIndex - 1 + products.length) % products.length;
+          break;
+        case 'ArrowDown':
+          nextIndex = Math.min(currentIndex + cols, products.length - 1);
+          break;
+        case 'ArrowUp':
+          nextIndex = Math.max(currentIndex - cols, 0);
+          break;
+        case 'Enter':
+          if (focusedCardId) {
+            setSelectedCardId(focusedCardId === selectedCardId ? null : focusedCardId);
+          }
+          return;
+      }
+
+      setFocusedCardId(products[nextIndex].id);
+      document.getElementById(`card-${products[nextIndex].id}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest'
+      });
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [focusedCardId, selectedCardId, products]);
+
+
+  useEffect(() => {
+    if (!products || products.length === 0) return;
+    if (products.length > 0 && !focusedCardId) {
+      setFocusedCardId(products[0].id);
+    }
+  }, [products]);
+
   return (
-    <div className="max-w-[1170px] 2xl:max-w-[1450px] w-full mx-auto px-4 sm:px-8 xl:px-0">
+    <div className="max-w-[1170px] 2xl:max-w-[1450px] w-full mx-auto px-4 sm:px-8 xl:px-0 relative">
       <div className="flex flex-col items-center justify-between py-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-dark py-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#800020] py-4">
           Choose a skip
         </h1>
         <p className="text-sm text-muted-foreground pb-4">
@@ -80,37 +123,35 @@ const StepPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-7.5 gap-y-6 mb-9">
           {products?.map((item) => (
             <Card
+              aria-selected={selectedCardId === item.id}
+              role="option"
               key={item.id}
-              className={`w-full h-full ${selectedItem?.id === item.id ? "border-4 border-[#FFD700] shadow-sm" : "hover:border-2   hover:border-[#FFD700] shadow-2xl "} rounded-md transition-all duration-300 ease-in-out"`}
+              className={`hover:shadow-2xl hover:bg-white ${focusedCardId === item.id ? 'ring ring-[#800020] border-none' : ''} rounded-md transition-all duration-300 ease-in-out`}
               onClick={(e) => {
-                handleClick(item);
+                setSelectedCardId(item.id === selectedCardId ? null : item.id)
               }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  handleClick(item);
-                }
-              }}
+               onFocus={() => setFocusedCardId(item.id)}
               tabIndex={0}
             >
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 p-2 relative">
+              <CardHeader className=" flex flex-row items-center justify-between space-y-0 p-2 relative">
                 <div className="w-full h-full text-center py-4 ">
                   <div className="w-full mx-auto">
-                    <h2 className="uppercase text-dark font-bold text-xl py-2">
+                    <h2 className="uppercase text-[#800020] font-bold text-xl py-2">
                       {item?.size} yards
                     </h2>
-                    <p className="text-sm text-muted-foreground ">
+                    <p className="text-dark text-sm text-muted-foreground ">
                       {item?.hire_period_days} {`day${item?.hire_period_days > 1 ? "s" : ""} hire period`}
                     </p>
-                    <p className="text-red text-2xl font-bold py-2">
+                    <p className="text-[#800020] text-2xl font-bold py-2">
                       £{item.price_before_vat.toFixed(2)}
                     </p>
                     <div
-                      aria-expanded={selectedItem?.id === item.id}
-                      className={`absolute top-2  left-2 ${selectedItem?.id === item.id ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
+                      aria-expanded={selectedCardId === item.id}
+                      className={`absolute top-2  left-2 ${selectedCardId === item.id ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
                     >
                       <Badge
                         variant={"outline"}
-                        className="text-green uppercase p-2 bg-white border boder-b-[#FFD700] w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
+                        className="text-white uppercase p-2 bg-[#800020] border boder-b-[#FFD700] w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
                       >
                         {"selected"}
                       </Badge>
@@ -128,12 +169,12 @@ const StepPage = () => {
                   sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 800px"
                 />
                 <div
-                  aria-expanded={!(selectedItem?.id === item.id)}
-                  className={`absolute top-3  right-2 ${!(selectedItem?.id === item.id) ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
+                  aria-expanded={!(selectedCardId === item.id)}
+                  className={`absolute top-3  right-2 ${!(selectedCardId=== item.id) ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
                 >
                   <Badge
                     variant={"outline"}
-                    className="text-red uppercase py-4 bg-white border boder-dark w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
+                    className="bg-[#800020] text-white uppercase py-4 border boder-dark w-[100px] h-[30px] text-xs font-extrabold shadow-lg"
                   >
                     {item.size} yards
                   </Badge>
@@ -143,7 +184,9 @@ const StepPage = () => {
           ))}
         </div>
       )}
-      <div className="flex flex-col lg:flex-row items-center justify-between py-0 bg-yellow-light">
+        {selectedCardId === selectedItem?.id && ( 
+        <div className="fixed bottom-0 left-0 right-0 z-10">
+        <div className="flex flex-col lg:flex-row items-center justify-between py-0 bg-yellow-light">
         <div className="col-span-1 sm:col-span-2 lg:col-span-3 xl:col-span-4 lg:max-w-[600px] w-full  p-6 rounded-lg shadow-lg">
           <p className="text-dark font-bold">
             Imagery and information shown throughout this website may not
@@ -151,13 +194,13 @@ const StepPage = () => {
             options and/or accessories may be featured at additional cost.
           </p>
         </div>
-        {/* <div className="text-green-dark py-4 text-center">
-          <p>{selectedItem?.title}</p>
-          <p className="text-2xl font-bold">{selectedItem?.price}</p>
-          <p>{selectedItem?.description}</p>
-        </div> */}
+        <div className="text-green-dark py-4 text-center">
+          <p className="uppercase">{selectedItem?.size} yards</p>
+          <p className="text-2xl font-bold">£{selectedItem.price_before_vat.toFixed(2)}</p>
+          <p>{selectedItem?.hire_period_days} {`day${selectedItem?.hire_period_days > 1 ? "s" : ""} hire period`}</p>
+        </div>
 
-        <div className="flex flex-col md:flex-row items-center justify-between py-4 px-4 ">
+      <div className="flex flex-col md:flex-row items-center justify-between py-4 px-4 ">
           <button
             className="mb-4 md:mb-0 md:mr-2 font-semibold bg-white text-dark px-10 h-full py-4 rounded-md hover:text-white hover:bg-blue-light transition-colors duration-300"
             onClick={() => alert("Proceeding to previous step...")}
@@ -165,13 +208,14 @@ const StepPage = () => {
             Back
           </button>
           <button
-            className="font-semibold bg-green text-white px-6 py-4 rounded-md hover:bg-blue-light transition-colors duration-300"
+            className="font-semibold bg-[#800020] text-white px-6 py-4 rounded-md hover:bg-blue-light transition-colors duration-300"
             onClick={() => alert("Proceeding to next step...")}
           >
             <span className="ml-1 whitespace-nowrap">Continue →</span>
           </button>
         </div>
-      </div>
+        </div>
+      </div>)} 
     </div>
   );
 };
