@@ -14,8 +14,13 @@ const StepPage = () => {
     products.find((item) => item.id === selectedCardId) || null;
 
   useEffect(() => {
+    if (products.length > 0) {
+        setLoading(true);
+      }
+  }, [products.length]);
+
+  useEffect(() => {
     const fetchData = async () => {
-      setLoading(true);
       try {
         const response = await fetch(
           "https://app.wewantwaste.co.uk/api/skips/by-location?postcode=NR32&area=Lowestoft",
@@ -27,9 +32,7 @@ const StepPage = () => {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-      } finally {
-        setLoading(false);
-      }
+      } 
     };
     fetchData();
   }, []);
@@ -46,18 +49,27 @@ const StepPage = () => {
       </div>
       {loading ? (
         <div className="flex items-center justify-center py-10">
-          <p className="text-lg text-muted-foreground">Loading...</p>
+          {Array.from({ length: 5 }).map((_, index) => (
+              // eslint-disable-next-line react-x/no-array-index-key
+              <div key={index} className="flex items-center space-x-4">
+                <div className="h-12 w-12 rounded-md bg-muted animate-pulse" />
+                <div className="space-y-2">
+                  <div className="h-4 w-[250px] bg-muted animate-pulse rounded" />
+                  <div className="h-4 w-[200px] bg-muted animate-pulse rounded" />
+                </div>
+              </div>
+            ))}
         </div>
-      ) : products?.length === 0 ? (
-        <div className="flex items-center justify-center py-10">
-          <p className="text-lg text-muted-foreground">No skips available</p>
-        </div>
-      ) : (
+      ) : products?.length > 0 ? (
         <GridLayout
           products={products}
           selectedCardId={selectedCardId}
           setSelectedCardId={setSelectedCardId}
         />
+      ) : (
+        <div className="flex items-center justify-center py-10">
+          <p className="text-lg text-muted-foreground">No skips available</p>
+        </div>
       )}
       <BottomLayout
         selectedCardId={selectedCardId}
