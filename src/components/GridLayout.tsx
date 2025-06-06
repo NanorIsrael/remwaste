@@ -3,19 +3,18 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Item } from "@/types/product";
 import { useEffect, useState } from "react";
+import { calculatePrice } from "@/lib/utils";
 
 type IGridLayout = {
   products: Item[];
   selectedCardId: number | null;
   setSelectedCardId: (id: number | null) => void;
-  calculatePrice: (item: Item) => string;
 };
 
 const GridLayout: React.FC<IGridLayout> = ({
   products,
   selectedCardId,
   setSelectedCardId,
-  calculatePrice,
 }) => {
   const [focusedCardId, setFocusedCardId] = useState<number | null>(null);
   const cols = 4;

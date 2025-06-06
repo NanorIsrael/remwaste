@@ -1,5 +1,7 @@
 "use client";
+import BottomLayout from "@/components/BottomLayout";
 import GridLayout from "@/components/GridLayout";
+import { calculatePrice } from "@/lib/utils";
 import { Item } from "@/types/product";
 import React, { use, useEffect, useRef, useState } from "react";
 
@@ -8,13 +10,8 @@ const StepPage = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
-  const selectedItem = products.find((item) => item.id === selectedCardId);
-
-  const calculatePrice = (item: Item) => {
-    const vatMultiplier = 1 + (item.vat || 0) / 100;
-    const priceWithVat = item.price_before_vat * vatMultiplier;
-    return priceWithVat.toFixed(2);
-  };
+  const selectedItem =
+    products.find((item) => item.id === selectedCardId) || null;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,10 +57,12 @@ const StepPage = () => {
           products={products}
           selectedCardId={selectedCardId}
           setSelectedCardId={setSelectedCardId}
-          calculatePrice={calculatePrice}
         />
       )}
-      
+      <BottomLayout
+        selectedCardId={selectedCardId}
+        selectedItem={selectedItem}
+      />
     </div>
   );
 };
