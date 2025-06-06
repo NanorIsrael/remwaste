@@ -540,6 +540,9 @@ body {
 .right-0{
   right: 0px;
 }
+.bottom-3{
+  bottom: 0.75rem;
+}
 .z-10{
   z-index: 10;
 }
@@ -678,6 +681,9 @@ body {
 .rounded-xl{
   border-radius: 0.75rem;
 }
+.rounded{
+  border-radius: 0.25rem;
+}
 .border{
   border-width: 1px;
 }
@@ -726,6 +732,10 @@ body {
 .bg-\[green\]{
   --tw-bg-opacity: 1;
   background-color: rgb(0 128 0 / var(--tw-bg-opacity));
+}
+.bg-dark{
+  --tw-bg-opacity: 1;
+  background-color: rgb(28 39 76 / var(--tw-bg-opacity));
 }
 .fill-\[url\(\#linear-gradient\)\]{
   fill: url(#linear-gradient);
@@ -823,6 +833,9 @@ body {
 .uppercase{
   text-transform: uppercase;
 }
+.capitalize{
+  text-transform: capitalize;
+}
 .leading-none{
   line-height: 1;
 }
@@ -875,6 +888,15 @@ body {
 .text-\[black\]{
   --tw-text-opacity: 1;
   color: rgb(0 0 0 / var(--tw-text-opacity));
+}
+.text-\[\#\]{
+  color: #;
+}
+.text-\[\#Ff\]{
+  color: #Ff;
+}
+.text-\[FFD700\]{
+  color: FFD700;
 }
 .opacity-0{
   opacity: 0;

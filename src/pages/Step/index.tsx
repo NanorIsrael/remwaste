@@ -101,6 +101,12 @@ const StepPage = () => {
     }
   }, [products]);
 
+  const calculatePrice = (item: Item) => {
+    const vatMultiplier = 1 + (item.vat || 0) / 100;
+    const priceWithVat = item.price_before_vat * vatMultiplier;
+    return priceWithVat.toFixed(2); 
+  }
+
   return (
     <div className="max-w-[1170px] 2xl:max-w-[1450px] w-full mx-auto px-4 sm:px-8 xl:px-0 relative">
       <div className="flex flex-col items-center justify-between py-4">
@@ -143,7 +149,7 @@ const StepPage = () => {
                       {item?.hire_period_days} {`day${item?.hire_period_days > 1 ? "s" : ""} hire period`}
                     </p>
                     <p className="text-[#800020] text-2xl font-bold py-2">
-                      £{item.price_before_vat.toFixed(2)}
+                      £{calculatePrice((item))}
                     </p>
                     <div
                       aria-expanded={selectedCardId === item.id}
@@ -178,7 +184,17 @@ const StepPage = () => {
                   >
                     {item.size} yards
                   </Badge>
-                </div>
+                  </div>
+                {(!item.allowed_on_road) && <div
+                  aria-expanded={!(selectedCardId === item.id)}
+                  className={`absolute bottom-3  left-2 ${!(selectedCardId=== item.id) ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
+                >
+                  <p
+                    className="bg-dark text-[#FFD700] capitalize px-4 py-4 border boder-dark w-full h-[30px] text-xs font-extrabold shadow-lg flex items-center justify-center rounded-md"
+                  >
+                    <span>not allowed on the road</span>
+                  </p>
+                </div>}
               </CardContent>
             </Card>
           ))}
@@ -196,7 +212,7 @@ const StepPage = () => {
         </div>
         <div className="text-green-dark py-4 text-center">
           <p className="uppercase">{selectedItem?.size} yards</p>
-          <p className="text-2xl font-bold">£{selectedItem.price_before_vat.toFixed(2)}</p>
+          <p className="text-2xl font-bold">£{calculatePrice((selectedItem))}</p>
           <p>{selectedItem?.hire_period_days} {`day${selectedItem?.hire_period_days > 1 ? "s" : ""} hire period`}</p>
         </div>
 
