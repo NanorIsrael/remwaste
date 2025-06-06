@@ -1,5 +1,4 @@
 import "../css/style.css";
-import Header from "../../components/Header";
 
 export default function RootLayout({
   children,
@@ -10,7 +9,6 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning={true}>
       <body>
         <>
-          <Header />
           {children}
         </>
       </body>
