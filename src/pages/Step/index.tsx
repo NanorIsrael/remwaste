@@ -28,7 +28,6 @@ const StepPage = () => {
         );
         const data = await response.json();
         if (data) {
-          console.log(data);
           setProducts(data);
         }
       } catch (error) {
