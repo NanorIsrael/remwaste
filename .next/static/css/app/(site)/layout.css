@@ -1449,6 +1449,38 @@ input[type='search']::-webkit-search-results-decoration {
   background-color: rgb(60 80 224 / var(--tw-bg-opacity)) !important;
 }
 
+.hover\:border-4:hover{
+  border-width: 4px;
+}
+
+.hover\:border:hover{
+  border-width: 1px;
+}
+
+.hover\:border-2:hover{
+  border-width: 2px;
+}
+
+.hover\:border-green:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(34 173 92 / var(--tw-border-opacity));
+}
+
+.hover\:border-green-light-3:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(130 230 172 / var(--tw-border-opacity));
+}
+
+.hover\:border-green-light:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(44 214 115 / var(--tw-border-opacity));
+}
+
+.hover\:border-green-light-4:hover{
+  --tw-border-opacity: 1;
+  border-color: rgb(172 239 200 / var(--tw-border-opacity));
+}
+
 .hover\:bg-blue-dark:hover{
   --tw-bg-opacity: 1;
   background-color: rgb(28 63 183 / var(--tw-bg-opacity));

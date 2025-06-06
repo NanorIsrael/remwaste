@@ -93,13 +93,11 @@ const data = [
   },
 ];
 const StepPage = () => {
-  const [isFocused, setIsFocused] = useState(false);
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
 
   const handleClick = (item: Item) => {
     if (selectedItem?.id === item.id) {
       setSelectedItem(null);
-      setIsFocused(false);
       return;
     } else {
       setSelectedItem(item);
@@ -120,15 +118,7 @@ const StepPage = () => {
         {data.map((item) => (
           <Card
             key={item.id}
-            className={`w-full h-full ${ (selectedItem?.id === item.id) ? "border-4   border-green " : "border border-white shadow-2xl "} rounded-md transition-all duration-300 ease-in-out`}
-            onMouseEnter={() => setIsFocused(true)}
-            onMouseLeave={() =>
-              !(selectedItem?.id === item.id) && setIsFocused(false)
-            }
-            onFocus={() => setIsFocused(true)}
-            onBlur={() =>
-              !(selectedItem?.id === item.id) && setIsFocused(false)
-            }
+            className={`w-full h-full ${ (selectedItem?.id === item.id) ? "border-4   border-green shadow-sm" : "hover:border-2   hover:border-green-light-4 shadow-2xl "} rounded-md transition-all duration-300 ease-in-out "`}
             onClick={(e) => {
               handleClick(item);
             }}
@@ -147,7 +137,7 @@ const StepPage = () => {
                     £{item.price}
                   </p>
                   <div
-                    aria-expanded={isFocused}
+                    aria-expanded={selectedItem?.id === item.id}
                     className={`absolute top-2  right-2 ${selectedItem?.id === item.id ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
                   >
                     <Badge
@@ -192,10 +182,10 @@ const StepPage = () => {
             options and/or accessories may be featured at additional cost.
           </p>
         </div>
-        <div className="text-green-dark py-4">
-          <p>40 Yard Skip</p>
-          <p className="text-2xl font-bold">£877</p>
-          <p>7 days hire</p>
+        <div className="text-green-dark py-4 text-center">
+          <p>{selectedItem?.title}</p>
+          <p className="text-2xl font-bold">{selectedItem?.price}</p>
+          <p>{selectedItem?.description}</p>
         </div>
 
         <div className="flex flex-col md:flex-row items-center justify-between py-4 px-4 ">
