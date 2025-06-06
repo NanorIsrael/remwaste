@@ -1,13 +1,14 @@
 "use client";
 import BottomLayout from "@/components/BottomLayout";
 import GridLayout from "@/components/GridLayout";
-import { calculatePrice } from "@/lib/utils";
+import IconFolderPlus from "@/components/icon/icon-folder-plus";
+// import { FolderX } from 'lucide-react';
 import { Item } from "@/types/product";
 import React, { use, useEffect, useRef, useState } from "react";
 
 const StepPage = () => {
   const [products, setProducts] = useState<Item[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
   const selectedItem =
@@ -15,9 +16,9 @@ const StepPage = () => {
 
   useEffect(() => {
     if (products.length > 0) {
-        setLoading(true);
-      }
-  }, [products.length]);
+      setLoading(false);
+    }
+  }, [products]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,7 +33,7 @@ const StepPage = () => {
         }
       } catch (error) {
         console.error("Error fetching data:", error);
-      } 
+      }
     };
     fetchData();
   }, []);
@@ -48,27 +49,36 @@ const StepPage = () => {
         </p>
       </div>
       {loading ? (
-        <div className="flex items-center justify-center py-10">
-          {Array.from({ length: 5 }).map((_, index) => (
-              // eslint-disable-next-line react-x/no-array-index-key
-              <div key={index} className="flex items-center space-x-4">
-                <div className="h-12 w-12 rounded-md bg-muted animate-pulse" />
-                <div className="space-y-2">
-                  <div className="h-4 w-[250px] bg-muted animate-pulse rounded" />
-                  <div className="h-4 w-[200px] bg-muted animate-pulse rounded" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-7.5 gap-y-6 mb-9">
+          {[...Array(4)].map((_, i) => (
+            <div key={i} className="animate-pulse" aria-live="polite">
+              <div className="bg-gray-200 rounded-lg shadow-md h-[350px]">
+                <div className="h-[200px] bg-gray-200 rounded-t-lg"></div>
+                <div className="p-4 space-y-3">
+                  <div className="h-5 bg-gray-200 rounded-full w-3/4"></div>
+                  <div className="h-3 bg-gray-200 rounded-full w-full"></div>
+                  <div className="h-3 bg-gray-200 rounded-full w-5/6"></div>
+                  <div className="h-4 bg-gray-200 rounded-full w-1/3 mt-4"></div>
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </div>
       ) : products?.length > 0 ? (
-        <GridLayout
-          products={products}
-          selectedCardId={selectedCardId}
-          setSelectedCardId={setSelectedCardId}
-        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-7.5 gap-y-6 mb-9">
+          <GridLayout
+            products={products}
+            selectedCardId={selectedCardId}
+            setSelectedCardId={setSelectedCardId}
+          />
+        </div>
       ) : (
-        <div className="flex items-center justify-center py-10">
-          <p className="text-lg text-muted-foreground">No skips available</p>
+        <div className="flex flex-col items-center justify-center gap-4 p-8 text-center">
+          <IconFolderPlus className="h-12 w-12 text-gray-400" />
+          <h3 className="text-lg font-medium text-gray-900">No Items Here</h3>
+          <p className="text-sm text-gray-500">
+            Nothing to display for this category.
+          </p>
         </div>
       )}
       <BottomLayout

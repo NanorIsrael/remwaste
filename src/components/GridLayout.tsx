@@ -78,7 +78,7 @@ const GridLayout: React.FC<IGridLayout> = ({
   }, [products]);
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 gap-x-7.5 gap-y-6 mb-9">
+    <>
       {products?.map((item) => (
         <Card
           aria-selected={selectedCardId === item.id}
@@ -151,7 +151,7 @@ const GridLayout: React.FC<IGridLayout> = ({
           </CardContent>
         </Card>
       ))}
-    </div>
+    </>
   );
 };
 
