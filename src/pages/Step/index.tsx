@@ -2,12 +2,10 @@
 import BottomLayout from "@/components/BottomLayout";
 import GridLayout from "@/components/GridLayout";
 import IconFolderPlus from "@/components/icon/icon-folder-plus";
-// import { FolderX } from 'lucide-react';
 import { Item } from "@/types/product";
 import React, { use, useEffect, useRef, useState } from "react";
 
-const StepPage = () => {
-  const [products, setProducts] = useState<Item[]>([]);
+const StepPage = ({products}: {products: Item[]}) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
@@ -19,23 +17,6 @@ const StepPage = () => {
       setLoading(false);
     }
   }, [products]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch(
-          "https://app.wewantwaste.co.uk/api/skips/by-location?postcode=NR32&area=Lowestoft",
-        );
-        const data = await response.json();
-        if (data) {
-          setProducts(data);
-        }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchData();
-  }, []);
 
   return (
     <div className="max-w-[1170px] 2xl:max-w-[1450px] w-full mx-auto px-4 sm:px-8 xl:px-0 relative">

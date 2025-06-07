@@ -7,12 +7,26 @@ export const metadata: Metadata = {
   // other metadata
 };
 
-export default function Home() {
+async function getProducts() {
+  try {
+    const response = await fetch(
+      "https://app.wewantwaste.co.uk/api/skips/by-location?postcode=NR32&area=Lowestoft",
+    );
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+  return [];
+}
+
+export default async function Home() {
+  const products = await getProducts();
   return (
     <>
       <main>
         <div className="overflow-hidden pt-15 bg-gray-100">
-          <StepPage />
+          <StepPage products={products}/>
         </div>
       </main>
     </>
