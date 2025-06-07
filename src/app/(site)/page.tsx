@@ -11,9 +11,13 @@ async function getProducts() {
   try {
     const response = await fetch(
       "https://app.wewantwaste.co.uk/api/skips/by-location?postcode=NR32&area=Lowestoft",
-    {
-  next: { revalidate: 3600 },
-});
+      {
+        next: { revalidate: 3600 },
+      },
+    );
+    if (!response.ok) {
+      throw new Error('Failed to fetch');
+    }
     const data = await response.json();
     return data;
   } catch (error) {
@@ -28,7 +32,7 @@ export default async function Home() {
     <>
       <main>
         <div className="overflow-hidden pt-15 bg-gray-100">
-          <StepPage products={}/>
+          <StepPage products={products} />
         </div>
       </main>
     </>

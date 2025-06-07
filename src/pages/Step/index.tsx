@@ -5,7 +5,7 @@ import IconFolderPlus from "@/components/icon/icon-folder-plus";
 import { Item } from "@/types/product";
 import React, { use, useEffect, useRef, useState } from "react";
 
-const StepPage = ({products}: {products: Item[]}) => {
+const StepPage = ({ products }: { products: Item[] }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [selectedCardId, setSelectedCardId] = useState<number | null>(null);
 
