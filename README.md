@@ -113,3 +113,5 @@ To improve code readability and maintainability, several reusable components wer
 Loading states and API errors are gracefully handled to ensure a smooth user experience. Given the simplicity of the application, only essential third-party libraries were used, all of which are listed in the dependencies section of the package.json file.
 
 Thank you 🚀
+
+[sandbox](https://remwaste-pink.vercel.app/)
